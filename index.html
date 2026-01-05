@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Gabriel 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  background: radial-gradient(circle, #1a0026, #090012);
+  overflow: hidden;
+  font-family: 'Dancing Script', cursive;
+  height: 100vh;
+  color: #fff0f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Pantalla de inicio */
+.start {
+  position: fixed;
+  inset: 0;
+  background: black;
+  color: pink;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  z-index: 50;
+  cursor: pointer;
+}
+
+/* Texto inicial gigante */
+#text-container {
+  position: absolute;
+  width: 90%;
+  max-height: 90%;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  overflow-y: auto;
+  padding: 1vmin 2vmin;
+  z-index: 10;
+}
+
+#text-container span {
+  opacity: 0;
+  display: inline-block;
+  line-height: 1.4;
+  font-size: calc(3vmin + 14px);
+  text-shadow: 0 0 10px pink, 0 0 20px #ffc0cb;
+}
+
+/* Contenedor del corazón de chispas */
+#heart-container {
+  position: absolute;
+  width: 50vmin;
+  height: 50vmin;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+/* Chispas en forma de corazón */
+.sparkle-heart {
+  position: absolute;
+  font-size: 14px;
+  opacity: 0;
+  text-shadow: 0 0 8px pink, 0 0 16px #ffc0cb;
+  animation: sparkle 2s infinite linear;
+}
+
+@keyframes sparkle {
+  0% { transform: scale(0); opacity:1; }
+  50% { transform: scale(1.5); opacity:1; }
+  100% { transform: scale(0); opacity:0; }
+}
+
+/* Frases flotando */
+.floating {
+  position: absolute;
+  font-weight: bold;
+  color: #ffc0cb;
+  font-size: 14px;
+  text-shadow: 0 0 6px #ffb6c1, 0 0 12px #ffd1dc;
+  animation: floatAnim 6s linear infinite;
+}
+
+@keyframes floatAnim {
+  0% { transform: translateY(0); opacity:0; }
+  25% { opacity:1; }
+  50% { transform: translateY(-50px); opacity:1; }
+  100% { transform: translateY(-100px); opacity:0; }
+}
+
+/* Frase final gigante */
+#final-message {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: calc(5vmin + 20px);
+  color: #ffb6c1;
+  text-align: center;
+  text-shadow: 0 0 10px pink, 0 0 20px #ffc0cb, 0 0 40px #ffccd5;
+  opacity: 0;
+  z-index: 30;
+}
+</style>
+</head>
+<body>
+
+<div class="start" id="start">Toca la pantalla 💗</div>
+<div id="text-container"></div>
+<div id="heart-container"></div>
+<div id="final-message">Te amaré hoy, mañana y por siempre 💖</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+let player;
+function onYouTubeIframeAPIReady(){
+  player = new YT.Player('player',{
+    height:'0', width:'0',
+    videoId:'twZZng1HO5E',
+    playerVars:{ loop:1, playlist:'twZZng1HO5E', autoplay:0 }
+  });
+}
+
+const message = `Gabriel te amo demasiado, eres todo lo que quiero en esta vida.
+Tu compañía me hace sentir viva, feliz y tranquila.
+Quiero quedarme a tu lado, conocer cada detalle de ti,
+estar en cada situación que te pase.
+La idea de que estés a mi lado me hace muy feliz.
+TE AMO DEMASIADO nunca lo olvides 💖`;
+
+const textContainer = document.getElementById("text-container");
+message.split('').forEach(letter=>{
+  const span=document.createElement('span');
+  span.textContent=letter;
+  textContainer.appendChild(span);
+});
+
+let index=0;
+function typeText(){
+  const spans=textContainer.querySelectorAll('span');
+  if(index<spans.length){
+    spans[index].style.opacity=1;
+    index++;
+    setTimeout(typeText,25);
+    textContainer.scrollTop = textContainer.scrollHeight;
+  } else {
+    setTimeout(showHeart, 6000);
+  }
+}
+
+// Corazón de chispas
+let sparkles=[];
+function showHeart(){
+  textContainer.style.transition="opacity 1.5s";
+  textContainer.style.opacity=0;
+  setTimeout(()=>{
+    textContainer.style.display="none";
+    const heartContainer=document.getElementById("heart-container");
+    heartContainer.style.display="block";
+    createHeartSparks(150);
+    animateHeartSparks();
+    createFloatingMessages();
+    setTimeout(showFinalMessage, 8000);
+  },1500);
+}
+
+function createHeartSparks(num){
+  const container=document.getElementById("heart-container");
+  for(let i=0;i<num;i++){
+    const s=document.createElement("div");
+    s.className="sparkle-heart";
+    s.innerHTML="💗";
+    const t=Math.random()*Math.PI*2;
+    const x=16*Math.pow(Math.sin(t),3);
+    const y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
+    s.style.left=(x*2+25)+"vmin";
+    s.style.top=(y*2+25)+"vmin";
+    container.appendChild(s);
+    sparkles.push(s);
+  }
+}
+
+function animateHeartSparks(){
+  sparkles.forEach((s,i)=>{
+    let angle=Math.random()*360;
+    let radius=1+Math.random()*3;
+    setInterval(()=>{
+      angle+=0.5;
+      const rad=angle*Math.PI/180;
+      const cx=parseFloat(s.style.left) + radius*Math.cos(rad);
+      const cy=parseFloat(s.style.top) + radius*Math.sin(rad);
+      s.style.left=cx+"vmin";
+      s.style.top=cy+"vmin";
+      const glow=Math.random()*20+10;
+      s.style.textShadow=0 0 ${glow}px pink, 0 0 ${glow*2}px #ffc0cb;
+    },50+i%10);
+  });
+}
+
+// Crear frases flotantes
+function createFloatingMessages(){
+  const phrases = ["TE AMO", "21/9/2024", "mi niño", "mi amor", "corazón", "mi vida", "cariño"];
+  phrases.forEach(text=>{
+    for(let i=0;i<6;i++){
+      const f=document.createElement("div");
+      f.className="floating";
+      f.innerText=text;
+      f.style.left=Math.random()*90+"vw";
+      f.style.top=Math.random()*90+"vh";
+      f.style.fontSize=(Math.random()*10+12)+"px";
+      document.body.appendChild(f);
+      setTimeout(()=>f.remove(),12000);
+    }
+  });
+}
+
+// Mostrar frase final gigante
+function showFinalMessage(){
+  const finalMsg = document.getElementById("final-message");
+  finalMsg.style.transition="opacity 2s";
+  finalMsg.style.opacity=1;
+}
+
+document.getElementById("start").addEventListener('click', ()=>{
+  document.getElementById("start").style.display="none";
+
+  if (player && player.playVideo) {
+    player.playVideo();
+  }
+
+  typeText();
+});
+</script>
+
+<div id="player"></div>
+</body>
+</html>
